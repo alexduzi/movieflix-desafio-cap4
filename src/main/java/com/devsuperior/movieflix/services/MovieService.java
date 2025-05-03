@@ -8,6 +8,7 @@ import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,14 +21,17 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<MovieCardDTO> findAll() {
         return movieRepository.findAll().stream().map(MovieCardDTO::new).toList();
     }
 
+    @Transactional(readOnly = true)
     public MovieDetailsDTO findById(Long id) {
         return movieRepository.findById(id).map(MovieDetailsDTO::new).orElseThrow(() -> new ResourceNotFoundException("Movie not found!"));
     }
 
+    @Transactional(readOnly = true)
     public Page<MovieCardDTO> searchMovies(Long genreId, Pageable pageable) {
         Page<Movie> result = movieRepository.searchMovies(genreId, pageable);
         return result.map(MovieCardDTO::new);
