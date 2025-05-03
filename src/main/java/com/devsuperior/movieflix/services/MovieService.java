@@ -2,6 +2,7 @@ package com.devsuperior.movieflix.services;
 
 import com.devsuperior.movieflix.dto.MovieCardDTO;
 import com.devsuperior.movieflix.dto.MovieDetailsDTO;
+import com.devsuperior.movieflix.dto.ReviewDTO;
 import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.repositories.MovieRepository;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
@@ -35,5 +36,10 @@ public class MovieService {
     public Page<MovieCardDTO> searchMovies(Long genreId, Pageable pageable) {
         Page<Movie> result = movieRepository.searchMovies(genreId, pageable);
         return result.map(MovieCardDTO::new);
+    }
+
+    public List<ReviewDTO> findByIdWithReviews(Long id) {
+        Movie movie = movieRepository.findByIdWithReviews(id);
+        return movie.getReviews().stream().map(ReviewDTO::new).toList();
     }
 }
